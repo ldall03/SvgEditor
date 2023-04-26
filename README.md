@@ -31,3 +31,4 @@ a powerful but simple library to handle svg graphics in C#. This other project: 
   - Tooltips
   - Some refactoring
   - Putting icons in the buttons instead of text, that would make the app look much cleaner
+  - Add poligons and lines to give more freedom
