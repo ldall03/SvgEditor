@@ -15,4 +15,6 @@ a powerful but simple library to handle svg graphics in C#. This other project: 
 
 <br>
 
-![Screenshot1](images/my-image.jpg)
+![Screenshot1](images/Screenshot 2023-04-24 161123.png)
+![Screenshot1](images/Screenshot 2023-04-25 214642.png)
+![Screenshot1](images/Screenshot 2023-04-25 230431.png)
