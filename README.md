@@ -24,7 +24,7 @@ a powerful but simple library to handle svg graphics in C#. This other project: 
 
 # Bugs
   - There might be bugs with the undo/redo systems ever since I've added the layers system, making these work together was difficult.
-  - Some informations in the shape properties box do not represent the desired values, sometimes some are not updated properly and sometimes for the square and circle, the information might look weird (unequal sides even they are drawn equally)
+  - Some informations in the shape properties box does not always represent the desired values, sometimes some are not updated properly, for example the square and circle, the information might look weird (unequal sides even they are drawn equally). 
   
 # Todo
   - Responsive UI, right now the UI is pretty static
