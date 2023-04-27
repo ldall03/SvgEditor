@@ -9,6 +9,7 @@ namespace FinalProject.Controllers
 
         public LayerController() { }
 
+        // To initialize an instance and fill it with LayerModels
         public LayerController(List<LayerModel> layers)
         {
             foreach (var layer in layers)
@@ -29,13 +30,15 @@ namespace FinalProject.Controllers
 
             var i = 0;
             var l_index = 0;
-            foreach (var l in LayerControls)
+            foreach (var l in LayerControls) // Find the index of the layer
             {
                 if (l == layer) 
                     l_index = i;
                 i++;
             }
 
+            // Swap the layer in LayerControls and also in the list layers
+            // as the LayerModels must have the same position as its LayerControl
             var tmpC = LayerControls[l_index];
             LayerControls[l_index] = LayerControls[l_index - 1];
             LayerControls[l_index - 1] = tmpC;
@@ -51,13 +54,16 @@ namespace FinalProject.Controllers
 
             var i = 0;
             var l_index = 0;
-            foreach (var l in LayerControls)
+            foreach (var l in LayerControls) // Find the index of the layer
+
             {
                 if (l == layer)
                     l_index = i;
                 i++;
             }
 
+            // Swap the layer in LayerControls and also in the list layers
+            // as the LayerModels must have the same position as its LayerControl
             var tmpC = LayerControls[l_index];
             LayerControls[l_index] = LayerControls[l_index + 1];
             LayerControls[l_index + 1] = tmpC;
@@ -91,6 +97,7 @@ namespace FinalProject.Controllers
                 CurrentLayer = null;
         }
 
+        // Adds a shape to the current layer
         public void AddShape(SimpleShapeModel shape)
         {
             CurrentLayer.LayerModel.Shapes.Add(shape);
@@ -101,6 +108,7 @@ namespace FinalProject.Controllers
             CurrentLayer.LayerModel.Shapes.Remove(shape);
         }
 
+        // Rearrange the order for z-index
         public void Sort()
         {
             CurrentLayer.LayerModel.Sort();

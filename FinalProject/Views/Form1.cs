@@ -26,11 +26,17 @@ namespace FinalProject
 
         private Button _selected_tool_btn;
         private bool _shift_down = false;
-        private bool _fire_on_change_event = true; // To not fire NumberBoxOnChange event when filling the table
+
+        // To not fire NumberBoxOnChange event when selecting shapes and filling the table
+        private bool _fire_on_change_event = true; 
 
         public Form1()
         {
             InitializeComponent();
+
+            KeyPreview = true;
+            KeyDown += new KeyEventHandler(onKeyDown);
+
             DocumentModel = new DocumentModel();
             ShapeDrawingController = new ShapeDrawingController(pictureBox1);
             FileController = new FileController(OnSave, OnOpen);
@@ -40,9 +46,6 @@ namespace FinalProject
             CurrentMode = Mode.DrawRect;
             _selected_tool_btn = rectToolButton;
             _selected_tool_btn.BackColor = Color.Gray;
-
-            KeyPreview = true;
-            KeyDown += new KeyEventHandler(onKeyDown);
 
             // Styling
             fillColorPanel.BackColor = Color.Red;
@@ -60,15 +63,11 @@ namespace FinalProject
                 tab.Text = "";
             tabControl2.SelectTab(1);
 
+            // Initial Layer
             var layer = new LayerControl("Layer_0");
-            layer.onLayerSelected += layerControl_OnSelect;
-            layer.onToggleVisible += layerControl_Visible;
-            layer.onSendUp += layerControl_SendUp;
-            layer.onSendDown += layerControl_SendDown;
-            layer.onRemove += layerControl_Remove;
             LayerController.AddLayer(layer);
-            layers_Container.Controls.Add(layer);
             DocumentModel.Layers.Add(layer.LayerModel);
+            UpdateLayerChange();
 
             UndoRedoController = new UndoRedoController(DocumentModel.Clone());
         }
@@ -83,15 +82,6 @@ namespace FinalProject
             var text = File.ReadAllText(fileName);
             DocumentModel = DocumentModel.FromJson(text);
             LayerController = new LayerController(DocumentModel.Layers);
-            foreach (var layer in LayerController.LayerControls)
-            {
-                layer.onLayerSelected += layerControl_OnSelect;
-                layer.onToggleVisible += layerControl_Visible;
-                layer.onSendUp += layerControl_SendUp;
-                layer.onSendDown += layerControl_SendDown;
-                layer.onRemove += layerControl_Remove;
-            }
-
             UpdateDocument();
             UpdateLayerChange();
         }
@@ -104,8 +94,12 @@ namespace FinalProject
 
         public void StartDrawingShape(SimpleShapeModel shape)
         {
-            if (LayerController.CurrentLayer.IsLocked || LayerController.LayerControls.Count == 0 || LayerController.CurrentLayer == null)
+            if (LayerController.CurrentLayer == null
+                || LayerController.CurrentLayer.IsLocked
+                || LayerController.LayerControls.Count == 0)
+            {
                 return;
+            }
 
             ShapeDrawingController.StartDrawing(shape, MousePosition);
             LayerController.AddShape(shape);
@@ -194,7 +188,7 @@ namespace FinalProject
             tabControl2.SelectTab(0);
         }
 
-        public void DeleteSelected(object sender, EventArgs e) // TODO bug with undo
+        public void DeleteSelected(object sender, EventArgs e)
         {
             foreach (var s in SelectionController.SelectedShapes)
                 LayerController.RemoveShape(s);
@@ -370,14 +364,6 @@ namespace FinalProject
             {
                 DocumentModel = doc;
                 LayerController = new LayerController(DocumentModel.Layers);
-                foreach (var layer in LayerController.LayerControls)
-                {
-                    layer.onLayerSelected += layerControl_OnSelect;
-                    layer.onToggleVisible += layerControl_Visible;
-                    layer.onSendUp += layerControl_SendUp;
-                    layer.onSendDown += layerControl_SendDown;
-                    layer.onRemove += layerControl_Remove;
-                }
                 UpdateDocument();
                 UpdateLayerChange();
             }
@@ -390,14 +376,6 @@ namespace FinalProject
             {
                 DocumentModel = doc;
                 LayerController = new LayerController(DocumentModel.Layers);
-                foreach (var layer in LayerController.LayerControls)
-                {
-                    layer.onLayerSelected += layerControl_OnSelect;
-                    layer.onToggleVisible += layerControl_Visible;
-                    layer.onSendUp += layerControl_SendUp;
-                    layer.onSendDown += layerControl_SendDown;
-                    layer.onRemove += layerControl_Remove;
-                }
                 UpdateDocument();
                 UpdateLayerChange();
             }
@@ -490,6 +468,7 @@ namespace FinalProject
             UndoRedoController.Add(DocumentModel.Clone());
             UpdateDocument();
         }
+
         private void borderWidthNumberBox_OnChange(object sender, EventArgs e)
         {
             if (!_fire_on_change_event) return;
@@ -543,16 +522,12 @@ namespace FinalProject
 
         private void onKeyDown(object sender, KeyEventArgs e)
         {
-            if (!_fire_on_change_event) return;
-
             if (e.KeyCode == Keys.ShiftKey)
                 _shift_down = true;
         }
 
         private void onKeyUp(object sender, KeyEventArgs e)
         {
-            if (!_fire_on_change_event) return;
-
             if (e.KeyCode == Keys.ShiftKey)
                 _shift_down = false;
         }
@@ -567,6 +542,7 @@ namespace FinalProject
             var count = LayerController.LayerControls.Count;
             var name = $"layer_{count}";
             var layer = new LayerControl(name);
+
             layer.onLayerSelected += layerControl_OnSelect;
             layer.onToggleVisible += layerControl_Visible;
             layer.onToggleLocked += layerControl_Locked;
@@ -576,6 +552,7 @@ namespace FinalProject
             layers_Container.Controls.Add(layer);
             LayerController.AddLayer(layer);
             DocumentModel.Layers.Add(layer.LayerModel);
+
             UndoRedoController.Add(DocumentModel.Clone());
         }
 
@@ -628,7 +605,14 @@ namespace FinalProject
                 layers_Container.Controls.RemoveAt(1);
 
             foreach (var layer in LayerController.LayerControls)
+            {
+                layer.onLayerSelected += layerControl_OnSelect;
+                layer.onToggleVisible += layerControl_Visible;
+                layer.onSendUp += layerControl_SendUp;
+                layer.onSendDown += layerControl_SendDown;
+                layer.onRemove += layerControl_Remove;
                 layers_Container.Controls.Add(layer);
+            }
         }
     }
 }

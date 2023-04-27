@@ -802,7 +802,7 @@
             this.tabPage4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage4.Size = new System.Drawing.Size(200, 256);
+            this.tabPage4.Size = new System.Drawing.Size(200, 286);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -845,7 +845,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Sgv Editor";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.onKeyUp);
             this.menuStrip1.ResumeLayout(false);
